@@ -11,6 +11,7 @@ import (
 
 	"happy-q-api/instruments"
 	"happy-q-api/interfaces"
+	repo "happy-q-api/repositories/mongodb"
 	"happy-q-api/transports"
 
 	"github.com/go-kit/kit/log"
@@ -64,8 +65,10 @@ func main() {
 
 	var qs interfaces.QueueServiceInterface
 	var ps interfaces.PersonServiceInterface
+	var pr interfaces.PersonRepository
+	pr = repo.NewMongoDBPersonRepository("")
 	qs = services.QueueService{}
-	ps = services.PersonService{}
+	ps = services.NewPersonService(pr)
 	/* qs = logs.LoggingQueueMiddleware(logger, qs) */
 	qs = instruments.InstrumentingQueueMiddleware{requestCount, requestLatency, qs}
 	popHandler := httptransport.NewServer(

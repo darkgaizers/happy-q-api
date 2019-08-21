@@ -15,13 +15,13 @@ type mongoDBQueueRepository struct {
 	Conn string
 }
 
-func (r *mongoDBQueueRepository) Push(ctx context.Context,service *model.Service, person *models.Person) (*models.QueueResult, error) {
+func (r *mongoDBQueueRepository) Push(ctx context.Context,service *models.Service, person *models.Person) (*models.QueueResult, error) {
 	return nil, errors.New("not implemented")
 }
-func (r *mongoDBQueueRepository) Pop(ctx context.Context,service *model.Service) (*models.Person, error) {
+func (r *mongoDBQueueRepository) Pop(ctx context.Context,service *models.Service) (*models.QueueMetadata, error) {
 	return nil, errors.New("not implemented")
 }
-func (r *mongoDBQueueRepository) View(ctx context.Context,service *model.Service) (*models.QueueView, error) {
+func (r *mongoDBQueueRepository) View(ctx context.Context,service *models.Service) (*models.QueueView, error) {
 	return nil, errors.New("not implemented")
 }
 func NewMongoDBQueueRepository(conn string) interfaces.QueueRepository {
