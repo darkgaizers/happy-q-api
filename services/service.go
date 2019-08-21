@@ -1,28 +1,50 @@
 package services
 
 import (
+	"context"
 	"errors"
-	"strings"
+	"happy-q-api/interfaces"
+	"happy-q-api/models"
 )
 
 // StringService provides operations on strings.
-type StringServiceInterface interface {
-	Uppercase(string) (string, error)
-	Count(string) int
+
+/* type QueueServiceInterface interface {
+	Push(*models.Service,*models.Person) (*models.QueueResult, error)
+	Pop() *models.Person
+	View() (*models.QueueView, error)
+} */
+/* Get(ID string) (*models.Person,error)
+Add(*models.Person) error
+Update(*models.PersonUpdate) error */
+type personService struct {
+	repository interfaces.PersonRepository
 }
 
-type StringService struct{}
-
-func (StringService) Uppercase(s string) (string, error) {
-	if s == "" {
-		return "", ErrEmpty
+func (p *personService) Get(ID string) (*models.Person, error) {
+	res, err := p.repository.Get(context.Background(), ID)
+	if err != nil {
+		return nil, err
 	}
-	return strings.ToUpper(s), nil
+	return res, nil
+
+	/* 	return &models.Person{
+		ID:   "1",
+		Name: "Test",
+		Type: "MockupType",
+	}, errors.New("not implemented") */
 }
 
-func (StringService) Count(s string) int {
-	return len(s)
+func (p *personService) Add(*models.Person) error {
+	return errors.New("not implemented")
+}
+func (p *personService) Update(*models.PersonUpdate) error {
+	return errors.New("not implemented")
+}
+func NewPersonService(er interfaces.PersonRepository) interfaces.PersonServiceInterface {
+	return &personService{er}
 }
 
 // ErrEmpty is returned when an input string is empty.
-var ErrEmpty = errors.New("empty string")
+/* var popError = errors.New("pop error")
+var pushError = errors.New("push error") */
