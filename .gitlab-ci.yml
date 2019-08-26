@@ -1,0 +1,32 @@
+image: golang:1.12
+
+variables:
+  REPO_NAME: code.wisanuc.site/happy-q-api
+  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+  DOCKER_DRIVER: overlay
+
+before_script:
+  - cd $CI_PROJECT_DIR
+
+stages:
+  - build
+  - release
+
+build:
+    stage: build
+    script:
+      - GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o happy-q-api main.go
+    artifacts:
+      paths:
+        - happy-q-api
+
+release:
+    image: docker:latest
+    services:
+      - docker:dind
+    stage: release
+    script: 
+      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+      - docker build -t happy-q-api .
+      - docker tag happy-q-api:latest $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME 
+      - docker push $CI_REGISTRY_IMAGE
